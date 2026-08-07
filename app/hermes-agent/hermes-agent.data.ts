@@ -1,20 +1,20 @@
 export type Platform = "mac" | "windows" | "linux" | "unknown";
 export type InstallerTab = "unix" | "windows";
 
-const site = "https://hermes-agent.nousresearch.com";
 const assets = "https://hermes-assets.nousresearch.com";
+const localAssets = "/assets/hermes-agent";
 
 export const HERMES_VERSION = "v0.19.1";
 
 export const media = {
-  hero: `${site}/img/desktop/hero-art.webp`,
-  showcasePoster: `${site}/img/desktop/showcase.webp`,
-  showcaseVideo: `${assets}/hermes-desktop.mp4`,
-  badge: `${site}/img/desktop/badge.webp`,
-  portalFigurePoster: `${site}/img/desktop/portal-figure.webp`,
-  portalFigureWebm: `${site}/img/desktop/portal-figure-orb.webm`,
-  portalFigureStackedMp4: `${site}/img/desktop/portal-figure-orb.mp4`,
-  nousMark: `${site}/img/desktop/nous.webp`,
+  hero: `${localAssets}/hero-art.webp`,
+  showcasePoster: `${localAssets}/showcase.webp`,
+  showcaseVideo: `${localAssets}/hermes-desktop.mp4`,
+  badge: `${localAssets}/badge.webp`,
+  portalFigurePoster: `${localAssets}/portal-figure.webp`,
+  portalFigureWebm: `${localAssets}/portal-figure-orb.webm`,
+  portalFigureStackedMp4: `${localAssets}/portal-figure-orb.mp4`,
+  nousMark: `${localAssets}/nous.webp`,
 } as const;
 
 export const installCommands: Record<InstallerTab, string> = {
@@ -29,7 +29,7 @@ export const downloads = [
     title: "Mac OS",
     action: "Download",
     href: `${assets}/Hermes-Setup.dmg?build=cc4cab2f592e`,
-    art: `${site}/img/desktop/platform-art-mac.webp`,
+    art: `${localAssets}/platform-art-mac.webp`,
   },
   {
     id: "windows",
@@ -37,7 +37,7 @@ export const downloads = [
     title: "Windows",
     action: "Download",
     href: `${assets}/Hermes-Setup.exe?build=cc4cab2f592e`,
-    art: `${site}/img/desktop/platform-art-windows.webp`,
+    art: `${localAssets}/platform-art-windows.webp`,
   },
   {
     id: "linux",
@@ -45,7 +45,7 @@ export const downloads = [
     title: "Linux",
     action: "Install via terminal",
     href: "#install",
-    art: `${site}/img/desktop/platform-art-linux.webp`,
+    art: `${localAssets}/platform-art-linux.webp`,
   },
 ] as const;
 
@@ -56,7 +56,7 @@ export const features = [
     title: "Lives Everywhere",
     description:
       "Telegram, Discord, Slack, WhatsApp, Signal, Email, CLI — and a growing list of platforms. One agent, one memory, every surface.",
-    art: `${site}/img/desktop/feature-connect.webp`,
+    art: `${localAssets}/feature-connect.webp`,
   },
   {
     number: "#2",
@@ -64,7 +64,7 @@ export const features = [
     title: "Persistent Memory",
     description:
       "It learns your projects, auto-generates skills, and never forgets how it solved a problem.",
-    art: `${site}/img/desktop/feature-memory.webp`,
+    art: `${localAssets}/feature-memory.webp`,
   },
   {
     number: "#3",
@@ -72,7 +72,7 @@ export const features = [
     title: "Focused Automation",
     description:
       "Natural-language scheduling for reports, backups, and briefings — running unattended through the gateway, focused every time.",
-    art: `${site}/img/desktop/feature-automation.webp`,
+    art: `${localAssets}/feature-automation.webp`,
   },
   {
     number: "#4",
@@ -80,7 +80,7 @@ export const features = [
     title: "Tasks Multiplied",
     description:
       "Isolated subagents with their own conversations, terminals, and Python RPC scripts for zero-context-cost pipelines.",
-    art: `${site}/img/desktop/feature-tasks.webp`,
+    art: `${localAssets}/feature-tasks.webp`,
   },
   {
     number: "#5",
@@ -88,7 +88,7 @@ export const features = [
     title: "Browse the Web",
     description:
       "Web search, browser automation, vision, image generation, text-to-speech, and multi-model reasoning.",
-    art: `${site}/img/desktop/feature-browse.webp`,
+    art: `${localAssets}/feature-browse.webp`,
   },
   {
     number: "#6",
@@ -96,7 +96,7 @@ export const features = [
     title: "Isolated Sandboxing",
     description:
       "Five backends — local, Docker, SSH, Singularity, Modal — with container hardening and namespace isolation.",
-    art: `${site}/img/desktop/feature-sandbox.webp`,
+    art: `${localAssets}/feature-sandbox.webp`,
   },
 ] as const;
 

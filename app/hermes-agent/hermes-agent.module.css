@@ -8,11 +8,14 @@
   --gutter: clamp(34px, 8.9vw, 210px);
   --edge: clamp(20px, 3.9vw, 94px);
   --gap: clamp(18px, 1.3vw, 32px);
+  --u-anchor: 0.58px;
+  --u: max(calc(100cqw / 2360), var(--u-anchor));
   --display: var(--font-hermes-display), Georgia, serif;
   --mono: var(--font-hermes-mono), "Courier New", monospace;
   --footer-opacity: 0;
   position: relative;
   min-height: 100vh;
+  container-type: inline-size;
   overflow: clip;
   background: var(--blue);
   color: var(--paper);
@@ -603,12 +606,16 @@
   transform: translateY(-2px);
 }
 
-.features {
-  --feature-lift-limit: -14dvh;
-  --feature-y: 0px;
+.featureParallax {
   position: relative;
   z-index: 30;
-  margin-bottom: var(--feature-lift-limit);
+}
+
+.features {
+  --feature-y: 0px;
+  position: relative;
+  z-index: 1;
+  margin-bottom: var(--feature-y);
   padding: clamp(110px, 10vw, 236px) var(--gutter) 0;
   overflow: clip;
   clip-path: inset(0);
@@ -650,30 +657,16 @@
   border-left: 1px solid var(--blue);
 }
 
-.featureBadgeRail {
-  position: absolute;
-  z-index: 4;
-  top: 0;
-  bottom: 0;
-  left: clamp(20px, 2vw, 48px);
-  width: clamp(34px, 3vw, 70px);
-  pointer-events: none;
-}
-
 .featureBadge {
   position: sticky;
-  top: clamp(82px, 15dvh, 180px);
-  width: 100%;
-  height: clamp(120px, 14vw, 330px);
-  margin-top: clamp(160px, 15vw, 355px);
-  overflow: hidden;
-  border: 1px solid var(--blue);
-}
-
-.featureBadge img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  top: calc(var(--frame) + 30 * var(--u));
+  z-index: 10;
+  display: block;
+  width: calc(84 * var(--u));
+  height: calc(120 * var(--u));
+  margin-left: calc(50 * var(--u));
+  margin-bottom: calc(-120 * var(--u));
+  pointer-events: none;
 }
 
 .featureGrid {
@@ -713,7 +706,6 @@
 }
 
 .featureImage {
-  --image-y: 0%;
   position: relative;
   aspect-ratio: 666 / 574;
   overflow: hidden;
@@ -731,11 +723,16 @@
 }
 
 .featureImage img {
+  --py-img: 0px;
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
-  height: 122%;
+  height: 100%;
   object-fit: cover;
-  transform: translateY(calc(-9% + var(--image-y)));
+  transform: translate3d(0, var(--py-img), 0) scale(1.22);
+  transform-origin: center;
+  mix-blend-mode: screen;
   will-change: transform;
 }
 
@@ -750,13 +747,17 @@
 .hermesWordmark {
   position: relative;
   z-index: 2;
-  margin: clamp(130px, 12vw, 285px) calc(var(--gutter) * -0.74) -0.08em;
+  width: 100%;
+  margin: 12rem 0 0;
   font-family: var(--display);
-  font-size: clamp(168px, 24.2vw, 570px);
+  font-size: 24.3cqi;
   font-weight: 300;
-  line-height: 0.67;
-  letter-spacing: -0.035em;
+  line-height: 0.8;
+  letter-spacing: 0.03em;
+  text-align: center;
   white-space: nowrap;
+  transform: translate(-9.5%, 40px) scaleX(1.06);
+  transform-origin: center bottom;
   pointer-events: none;
 }
 
@@ -909,10 +910,10 @@
 }
 
 .reducedMotion .features {
-  --feature-lift-limit: 0px;
   --feature-y: 0px;
   margin-bottom: 0;
   transform: none;
+  will-change: auto;
 }
 
 .reducedMotion .portalFooter {
@@ -927,7 +928,9 @@
 }
 
 .reducedMotion .featureImage img {
-  transform: translateY(-9%);
+  --py-img: 0px;
+  transform: translate3d(0, 0, 0) scale(1.22);
+  will-change: auto;
 }
 
 @keyframes borderTravel {
@@ -1159,7 +1162,7 @@
     padding: 7px 9px;
   }
 
-  .featureBadgeRail {
+  .featureBadge {
     display: none;
   }
 
@@ -1187,9 +1190,10 @@
   }
 
   .hermesWordmark {
-    margin: 120px -13px -0.07em;
-    font-size: 29vw;
-    line-height: 0.7;
+    margin: 4rem 0 0;
+    font-size: 24.3cqi;
+    line-height: 0.8;
+    transform: translate(-0.7%, 8px) scaleX(1.06);
   }
 
   .portalFooter {

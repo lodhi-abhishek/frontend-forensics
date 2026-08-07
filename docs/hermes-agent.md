@@ -44,7 +44,7 @@ No shared project files or existing routes are modified.
 `hermes-agent.data.ts` keeps implementation data outside the JSX:
 
 - Platform and installer TypeScript types
-- Public Hermes image/video hosts
+- Route-local Hermes image/video paths
 - Install commands
 - DMG and EXE links
 - Platform card content
@@ -68,10 +68,11 @@ HermesAgent
 │   │   └── Installer
 │   ├── Showcase
 │   ├── DownloadCards
-│   └── Features
-│       ├── bounded sticky badge rail
-│       ├── feature grid
-│       └── giant HERMES wipe edge
+│   └── feature motion wrapper
+│       ├── direct sticky Hermes badge
+│       └── Features panel
+│           ├── feature grid
+│           └── giant HERMES stop/wipe edge
 ├── PortalFooter
 │   └── PortalFigureMedia
 └── viewportFrame
@@ -186,21 +187,24 @@ Rejected autoplay promises are ignored safely. Reduced-motion sessions keep the 
 
 ### Scroll animation and footer reveal
 
-The final effect is a physical wipe, not a crossfade. The fully opaque scrolling wrapper ends after the white feature panel and then contributes a transparent `100dvh` bottom margin. The fixed Portal footer sits at `z-index: 1` beneath the wrapper. As the last white section and its HERMES wordmark move upward, the transparent margin exposes the woman and revolving globe behind them.
+The final effect is a physical wipe, not a crossfade. The fully opaque scrolling wrapper ends after the white feature panel and contributes a transparent `100dvh` bottom margin. The fixed Portal footer sits at `z-index: 1` beneath it. As the white panel and HERMES word move upward, that transparent runway exposes the woman and revolving globe.
 
-A single passive scroll listener and one resize listener schedule updates through `requestAnimationFrame`. The loop:
+The feature-motion wrapper remains untransformed and provides stable document geometry. After mount, fonts, load, resize, and orientation changes, a measurement pass caches the wrapper top, HERMES stop offset, badge sticky bottom, image-box geometry, viewport height, and the baseline maximum scroll. When measurement occurs during a negative panel margin, the current `--feature-y` value is added back mathematically so the motion does not change its own scroll-height input.
 
-1. Calculates the remaining distance to the document bottom.
-2. Computes footer opacity with `(0.72 × viewportHeight - remaining) / (0.38 × viewportHeight)`, clamped to 0–1.
-3. Computes a synchronized final feature-panel lift that reaches approximately `-14vh` at the bottom.
-4. Writes `--feature-y` for the visible transform and `--feature-lift-limit` for the matching negative layout compensation.
-5. Measures each `[data-parallax]` feature image and writes its independent `--image-y` value.
-6. Starts the Portal alpha video shortly before the footer becomes visible.
-7. Enables the footer link only after the reveal passes 98 percent and pauses media after the user scrolls away.
+A single passive scroll listener schedules one `requestAnimationFrame`. Each frame:
 
-The feature section uses `overflow: clip`, making its lower boundary and the giant HERMES word the hard wipe edge. The badge sits in a full-height rail and uses bounded sticky positioning, so it remains present through the feature grid and stops inside the white section.
+1. Computes feature lift with `clamp((viewportHeight - max(featureTop - scroll, 0)) × 0.14, 0, 0.18 × viewportHeight)`.
+2. Writes the same negative value to the panel transform and `margin-bottom` through `--feature-y`.
+3. Keeps the badge sticky normally, then translates it upward so its bottom remains 16px above the HERMES stop marker.
+4. Computes each image’s normalized distance from viewport center and writes `--py-img`, allowing ±10% of the image-box height.
+5. Computes footer opacity with `(0.72 × viewportHeight - remaining) / (0.38 × viewportHeight)`, clamped to 0–1.
+6. Starts the Portal alpha video shortly before the footer appears, enables footer controls above 98% reveal, and pauses media after scrolling away.
 
-Per-frame positions are sent directly to CSS custom properties. React state only changes when media activity or footer interactivity crosses a threshold, avoiding a component render on every scroll frame.
+The white panel uses `overflow: clip`, making its lower boundary and HERMES word the hard wipe edge. Lift begins when the feature wrapper enters the viewport and reaches an effective 14vh when its top reaches the viewport top, rather than waiting until the final footer runway.
+
+Feature photographs use absolute centered media inside `666 / 574` boxes. The transform is `translate3d(0, var(--py-img), 0) scale(1.22)`, which enlarges from the center and prevents the previous top-left-biased crop.
+
+Per-frame work consumes cached measurements and writes CSS custom properties directly. React state changes only when media activity or footer interactivity crosses a threshold.
 
 ### Portal orb alignment
 
@@ -223,7 +227,7 @@ This places the revolving globe inside the PORTAL `O` while keeping the woman, h
 - Multi-column hero install controls
 - Three platform cards in one row
 - Three-column feature grid
-- Bounded sticky Hermes badge
+- Direct sticky Hermes badge sized at `84u × 120u` with a scripted 16px HERMES stop
 - Giant HERMES wordmark acting as the white wipe edge
 - Stacked ghost NOUS / PORTAL typography
 - Animated woman-and-orb alpha video aligned to the PORTAL O
@@ -267,8 +271,9 @@ JavaScript observes `prefers-reduced-motion: reduce`. When enabled:
 
 - CTA scrambling stops
 - Showcase autoplay stops
-- Scroll-driven parallax and the final HERMES lift are not installed
+- Scroll-driven parallax, feature lift, and badge-stop translation are not installed
 - Feature transform and negative-margin compensation reset to zero
+- Feature photos retain the corrected centered `scale(1.22)` crop with `--py-img: 0px`
 - Download edge animation is disabled
 - The Portal footer moves into normal document flow after HERMES at full opacity
 - The transparent `100dvh` reveal margin is removed
@@ -279,14 +284,11 @@ This ensures the page does not require motion to expose content or controls.
 
 ## External asset dependency
 
-The recreation intentionally uses public media from:
+The recreation keeps its page media in:
 
-- `https://hermes-agent.nousresearch.com`
-- `https://hermes-assets.nousresearch.com`
+- `public/assets/hermes-agent`
 
-If those hosts remove or rename an asset, the corresponding media will stop loading. Text, controls, section dimensions, and fallback backgrounds remain usable, but the page will no longer visually match the source as closely.
-
-For a production fork that must be independent of the upstream site, obtain permission to store the media locally and replace the URLs in `hermes-agent.data.ts`.
+These files are referenced from `hermes-agent.data.ts`, so the rendered page no longer depends on upstream media hosts.
 
 ## Verification
 
@@ -319,8 +321,10 @@ Manually verify:
 - Installer arrow-key navigation and copy feedback
 - Video play/pause threshold
 - Download-card hover and keyboard focus states
-- Feature grid, independent image parallax, and bounded sticky badge
-- HERMES wordmark clipping and approximately `-14vh` final lift
+- Feature grid and centered `scale(1.22)` photo framing with no top-left bias
+- Direct badge dimensions of `84u × 120u`, sticky top at `frame + 30u`, and a stop gap of approximately 16px above HERMES
+- Feature-entry lift beginning at the viewport edge, with matched transform/margin and approximately `-14vh` at the feature-top crossing
+- HERMES wordmark clipping and continuous footer transition without late jumps
 - A hard white-panel wipe with no blue painted spacer or foreground opacity fade
 - Footer opacity at the `0.72h → 0.34h` remaining-scroll interval
 - Woman/orb WebM transparency and changing video `currentTime` in Chromium/Firefox

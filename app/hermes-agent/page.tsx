@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://hermes-agent.nousresearch.com/opengraph-image.png",
+        url: "/assets/hermes-agent/opengraph-image.png",
         width: 1200,
         height: 692,
         alt: "Hermes Agent by Nous Research",
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Hermes Agent | Nous Research",
     description: "The open-source agent that grows with you.",
-    images: ["https://hermes-agent.nousresearch.com/opengraph-image.png"],
+    images: ["/assets/hermes-agent/opengraph-image.png"],
   },
 };
 

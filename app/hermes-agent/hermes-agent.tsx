@@ -36,6 +36,25 @@ import { PortalFigureMedia } from "./portal-figure-media";
 
 const SCRAMBLE_GLYPHS = "/\\-_=+|<>~:*";
 
+type ParallaxMetric = {
+  image: HTMLElement;
+  boxTop: number;
+  boxHeight: number;
+};
+
+type MotionMetrics = {
+  viewportHeight: number;
+  maximumScroll: number;
+  featureTop: number;
+  stopOffset: number;
+  badgeStickyBottom: number;
+  badgeVisible: boolean;
+  panel: HTMLElement;
+  badge: HTMLElement | null;
+  stop: HTMLElement;
+  images: ParallaxMetric[];
+};
+
 function detectPlatform(): Platform {
   const source = `${navigator.platform ?? ""} ${navigator.userAgent}`;
   if (/Mac|iPhone|iPad/i.test(source)) return "mac";
@@ -508,46 +527,63 @@ function DownloadCards() {
 }
 
 function Features({
-  sectionRef,
+  wrapperRef,
 }: {
-  sectionRef: (node: HTMLElement | null) => void;
+  wrapperRef: (node: HTMLDivElement | null) => void;
 }) {
   return (
-    <section
-      ref={sectionRef}
-      className={styles.features}
-      aria-labelledby="features-title"
-    >
-      <div className={styles.featureBadgeRail} aria-hidden="true">
-        <div className={styles.featureBadge}>
-          <img src={media.badge} alt="" width={600} height={1200} />
+    <div ref={wrapperRef} className={styles.featureParallax}>
+      <img
+        className={styles.featureBadge}
+        src={media.badge}
+        alt=""
+        width={600}
+        height={1200}
+        aria-hidden="true"
+        data-feature-badge
+      />
+      <section
+        className={styles.features}
+        aria-labelledby="features-title"
+        data-feature-panel
+      >
+        <div className={styles.featureMarker}>
+          <span>Feature</span>
+          <span>Preview</span>
         </div>
-      </div>
-      <div className={styles.featureMarker}>
-        <span>Feature</span>
-        <span>Preview</span>
-      </div>
-      <h2 className={styles.srOnly} id="features-title">
-        Hermes Agent features
-      </h2>
-      <div className={styles.featureGrid}>
-        {features.map((feature) => (
-          <article className={styles.feature} key={feature.number}>
-            <p className={styles.featureEyebrow}>
-              <span>{feature.number}</span> {feature.verb}
-            </p>
-            <h3>{feature.title}</h3>
-            <div className={styles.featureImage} data-parallax>
-              <img src={feature.art} alt="" width={1334} height={1148} aria-hidden="true" />
-            </div>
-            <p className={styles.featureDescription}>{feature.description}</p>
-          </article>
-        ))}
-      </div>
-      <div className={styles.hermesWordmark} aria-hidden="true">
-        Hermes
-      </div>
-    </section>
+        <h2 className={styles.srOnly} id="features-title">
+          Hermes Agent features
+        </h2>
+        <div className={styles.featureGrid}>
+          {features.map((feature) => (
+            <article className={styles.feature} key={feature.number}>
+              <p className={styles.featureEyebrow}>
+                <span>{feature.number}</span> {feature.verb}
+              </p>
+              <h3>{feature.title}</h3>
+              <div className={styles.featureImage}>
+                <img
+                  src={feature.art}
+                  alt=""
+                  width={1334}
+                  height={1148}
+                  aria-hidden="true"
+                  data-parallax
+                />
+              </div>
+              <p className={styles.featureDescription}>{feature.description}</p>
+            </article>
+          ))}
+        </div>
+        <div
+          className={styles.hermesWordmark}
+          aria-hidden="true"
+          data-feature-stop
+        >
+          Hermes
+        </div>
+      </section>
+    </div>
   );
 }
 
@@ -666,53 +702,133 @@ export function HermesAgent() {
   const [footerInteractive, setFooterInteractive] = useState(false);
   const [footerMediaActive, setFooterMediaActive] = useState(false);
   const pageRef = useRef<HTMLElement>(null);
-  const featureRef = useRef<HTMLElement | null>(null);
+  const featureRef = useRef<HTMLDivElement | null>(null);
+  const motionMetricsRef = useRef<MotionMetrics | null>(null);
   const rafRef = useRef<number | null>(null);
 
   useEffect(() => setPlatform(detectPlatform()), []);
 
+  const measureMotion = useCallback(() => {
+    const wrapper = featureRef.current;
+    if (!wrapper) return;
+
+    const panel = wrapper.querySelector<HTMLElement>("[data-feature-panel]");
+    const badge = wrapper.querySelector<HTMLElement>("[data-feature-badge]");
+    const stop = wrapper.querySelector<HTMLElement>("[data-feature-stop]");
+    if (!panel || !stop) return;
+
+    const viewportHeight = window.innerHeight;
+    const currentFeatureY =
+      Number.parseFloat(
+        window.getComputedStyle(panel).getPropertyValue("--feature-y"),
+      ) || 0;
+    const panelRect = panel.getBoundingClientRect();
+    const stopOffset = stop.getBoundingClientRect().top - panelRect.top;
+    const badgeStyle = badge ? window.getComputedStyle(badge) : null;
+    const badgeVisible = Boolean(badge && badgeStyle?.display !== "none");
+    const badgeStickyBottom = badgeVisible
+      ? (Number.parseFloat(badgeStyle?.top ?? "0") || 0) +
+        (badge?.offsetHeight ?? 0)
+      : 0;
+
+    const images = Array.from(
+      wrapper.querySelectorAll<HTMLElement>("[data-parallax]"),
+    ).map((image) => {
+      const box = image.parentElement as HTMLElement;
+      const rect = box.getBoundingClientRect();
+      return {
+        image,
+        boxTop: rect.top + window.scrollY - currentFeatureY,
+        boxHeight: rect.height,
+      };
+    });
+
+    motionMetricsRef.current = {
+      viewportHeight,
+      maximumScroll: Math.max(
+        0,
+        document.documentElement.scrollHeight -
+          viewportHeight -
+          currentFeatureY,
+      ),
+      featureTop: wrapper.getBoundingClientRect().top + window.scrollY,
+      stopOffset,
+      badgeStickyBottom,
+      badgeVisible,
+      panel,
+      badge,
+      stop,
+      images,
+    };
+  }, []);
+
   const updateMotion = useCallback(() => {
     rafRef.current = null;
     const page = pageRef.current;
-    const feature = featureRef.current;
-    if (!page || !feature || reducedMotion) {
+    const metrics = motionMetricsRef.current;
+    if (!page || !metrics || reducedMotion) {
       setFooterInteractive(reducedMotion);
       setFooterMediaActive(false);
       return;
     }
 
-    const viewportHeight = window.innerHeight;
-    const maximumScroll = Math.max(
+    const clamp = (value: number, minimum: number, maximum: number) =>
+      Math.max(minimum, Math.min(maximum, value));
+    const scroll = clamp(window.scrollY, 0, metrics.maximumScroll);
+    const distanceBelowTop = Math.max(metrics.featureTop - scroll, 0);
+    const lift = clamp(
+      (metrics.viewportHeight - distanceBelowTop) * 0.14,
       0,
-      document.documentElement.scrollHeight - viewportHeight,
+      metrics.viewportHeight * 0.18,
     );
-    const scroll = Math.max(0, Math.min(maximumScroll, window.scrollY));
-    const remaining = Math.max(0, maximumScroll - scroll);
-    const clamp = (value: number) => Math.max(0, Math.min(1, value));
-    const reveal = clamp(
-      (viewportHeight * 0.72 - remaining) / (viewportHeight * 0.38),
-    );
-    const liftProgress = clamp(
-      (viewportHeight * 0.72 - remaining) / (viewportHeight * 0.72),
-    );
-    const maximumLift = viewportHeight * 0.14;
+    const featureY = lift === 0 ? "0px" : `${(-lift).toFixed(1)}px`;
 
-    page.style.setProperty("--footer-opacity", String(reveal));
-    feature.style.setProperty("--feature-lift-limit", `${-maximumLift}px`);
-    feature.style.setProperty(
-      "--feature-y",
-      `${-maximumLift * liftProgress}px`,
-    );
+    if (metrics.panel.style.getPropertyValue("--feature-y") !== featureY) {
+      metrics.panel.style.setProperty("--feature-y", featureY);
+    }
 
-    feature.querySelectorAll<HTMLElement>("[data-parallax]").forEach((element) => {
-      const rect = element.getBoundingClientRect();
-      const center = rect.top + rect.height / 2;
-      const normalized = Math.max(-1, Math.min(1, (center - viewportHeight / 2) / viewportHeight));
-      element.style.setProperty("--image-y", `${normalized * -8}%`);
+    if (metrics.badge) {
+      let badgeTransform = "";
+      if (metrics.badgeVisible) {
+        const stopTop =
+          metrics.featureTop + metrics.stopOffset - scroll - lift;
+        const availableBottom = stopTop - 16;
+        if (metrics.badgeStickyBottom > availableBottom) {
+          badgeTransform = `translateY(${(
+            availableBottom - metrics.badgeStickyBottom
+          ).toFixed(1)}px)`;
+        }
+      }
+      if (metrics.badge.style.transform !== badgeTransform) {
+        metrics.badge.style.transform = badgeTransform;
+      }
+    }
+
+    metrics.images.forEach(({ image, boxTop, boxHeight }) => {
+      const boxCenter = boxTop - scroll - lift + boxHeight / 2;
+      const normalized = clamp(
+        (boxCenter - metrics.viewportHeight / 2) /
+          (metrics.viewportHeight / 2 + boxHeight / 2),
+        -1,
+        1,
+      );
+      const imageY = `${(-normalized * boxHeight * 0.1).toFixed(1)}px`;
+      if (image.style.getPropertyValue("--py-img") !== imageY) {
+        image.style.setProperty("--py-img", imageY);
+      }
     });
 
+    const remaining = Math.max(0, metrics.maximumScroll - scroll);
+    const reveal = clamp(
+      (metrics.viewportHeight * 0.72 - remaining) /
+        (metrics.viewportHeight * 0.38),
+      0,
+      1,
+    );
+    page.style.setProperty("--footer-opacity", String(reveal));
+
     setFooterMediaActive((current) => {
-      const next = remaining < viewportHeight * 0.82;
+      const next = remaining < metrics.viewportHeight * 0.82;
       return current === next ? current : next;
     });
     setFooterInteractive((current) => {
@@ -722,10 +838,17 @@ export function HermesAgent() {
   }, [reducedMotion]);
 
   useEffect(() => {
+    const wrapper = featureRef.current;
+    const panel = wrapper?.querySelector<HTMLElement>("[data-feature-panel]");
+    const badge = wrapper?.querySelector<HTMLElement>("[data-feature-badge]");
+    const images = wrapper?.querySelectorAll<HTMLElement>("[data-parallax]");
+
     if (reducedMotion) {
       pageRef.current?.style.setProperty("--footer-opacity", "1");
-      featureRef.current?.style.setProperty("--feature-lift-limit", "0px");
-      featureRef.current?.style.setProperty("--feature-y", "0px");
+      panel?.style.setProperty("--feature-y", "0px");
+      if (badge) badge.style.transform = "";
+      images?.forEach((image) => image.style.setProperty("--py-img", "0px"));
+      motionMetricsRef.current = null;
       setFooterInteractive(true);
       setFooterMediaActive(false);
       return;
@@ -736,16 +859,33 @@ export function HermesAgent() {
         rafRef.current = window.requestAnimationFrame(updateMotion);
       }
     };
+    const measureAndSchedule = () => {
+      measureMotion();
+      schedule();
+    };
 
-    schedule();
+    let cancelled = false;
+    measureAndSchedule();
+    void document.fonts?.ready.then(() => {
+      if (!cancelled) measureAndSchedule();
+    });
+
+    const onLoad = () => measureAndSchedule();
+    if (document.readyState !== "complete") {
+      window.addEventListener("load", onLoad, { once: true });
+    }
     window.addEventListener("scroll", schedule, { passive: true });
-    window.addEventListener("resize", schedule);
+    window.addEventListener("resize", measureAndSchedule);
+    window.addEventListener("orientationchange", measureAndSchedule);
     return () => {
+      cancelled = true;
+      window.removeEventListener("load", onLoad);
       window.removeEventListener("scroll", schedule);
-      window.removeEventListener("resize", schedule);
+      window.removeEventListener("resize", measureAndSchedule);
+      window.removeEventListener("orientationchange", measureAndSchedule);
       if (rafRef.current !== null) window.cancelAnimationFrame(rafRef.current);
     };
-  }, [reducedMotion, updateMotion]);
+  }, [measureMotion, reducedMotion, updateMotion]);
 
   const rootClassName = useMemo(
     () => `${styles.page} ${reducedMotion ? styles.reducedMotion : ""}`,
@@ -759,7 +899,7 @@ export function HermesAgent() {
         <Showcase reducedMotion={reducedMotion} />
         <DownloadCards />
         <Features
-          sectionRef={(node) => {
+          wrapperRef={(node) => {
             featureRef.current = node;
           }}
         />
