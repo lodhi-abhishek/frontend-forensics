@@ -10,6 +10,8 @@ import {
   useState,
 } from "react";
 import { ContactForm } from "./contact-form";
+import { HeroPointerEffects } from "./hero-pointer-effects";
+import { LoadingOverlay } from "./loading-overlay";
 import {
   clients,
   media,
@@ -140,86 +142,57 @@ function FullscreenMenu({
   );
 }
 
-function CustomCursor({ reducedMotion }: { reducedMotion: boolean }) {
-  const cursorRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (reducedMotion) return;
-    const fine = window.matchMedia("(hover: hover) and (pointer: fine)");
-    if (!fine.matches) return;
-    const cursor = cursorRef.current;
-    if (!cursor) return;
-
-    let targetX = -100;
-    let targetY = -100;
-    let currentX = -100;
-    let currentY = -100;
-    let animationFrame = 0;
-
-    const draw = () => {
-      currentX += (targetX - currentX) * 0.18;
-      currentY += (targetY - currentY) * 0.18;
-      cursor.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
-      animationFrame = requestAnimationFrame(draw);
-    };
-    const onMove = (event: PointerEvent) => {
-      targetX = event.clientX;
-      targetY = event.clientY;
-      cursor.dataset.visible = "true";
-      const target = event.target as HTMLElement;
-      cursor.dataset.active = target.closest("a, button, summary, [role='tab']")
-        ? "true"
-        : "false";
-    };
-    const onLeave = () => {
-      cursor.dataset.visible = "false";
-    };
-
-    document.documentElement.dataset.aeosCursor = "true";
-    window.addEventListener("pointermove", onMove);
-    document.documentElement.addEventListener("mouseleave", onLeave);
-    animationFrame = requestAnimationFrame(draw);
-    return () => {
-      delete document.documentElement.dataset.aeosCursor;
-      window.removeEventListener("pointermove", onMove);
-      document.documentElement.removeEventListener("mouseleave", onLeave);
-      cancelAnimationFrame(animationFrame);
-    };
-  }, [reducedMotion]);
-
-  return <div ref={cursorRef} className={styles.customCursor} aria-hidden="true" />;
-}
-
 function Hero({ reducedMotion }: { reducedMotion: boolean }) {
   const letters = ["m", "a", "g", "i", "c"];
+  const wordRef = useRef<HTMLDivElement>(null);
+  const subtitleRef = useRef<HTMLSpanElement>(null);
+  const letterRefs = useRef<Array<HTMLSpanElement | null>>([]);
+
   return (
-    <section className={styles.hero} id="top" aria-labelledby="aeos-title">
-      <div className={styles.heroAtmosphere} aria-hidden="true" />
-      <h1 id="aeos-title" className={styles.srOnly}>
-        Magic as a service
-      </h1>
-      <div className={styles.heroComposition} aria-hidden="true">
-        <div className={styles.magicWord}>
-          {letters.map((letter, index) => (
-            <span key={letter} style={{ "--letter-index": index } as React.CSSProperties}>
-              {letter}
-            </span>
-          ))}
+    <>
+      <section className={styles.hero} id="top" aria-labelledby="aeos-title">
+        <div className={styles.heroAtmosphere} aria-hidden="true" />
+        <h1 id="aeos-title" className={styles.srOnly}>
+          Magic as a service
+        </h1>
+        <div className={styles.heroComposition} aria-hidden="true">
+          <div ref={wordRef} className={styles.magicWord}>
+            {letters.map((letter, index) => (
+              <span
+                key={letter}
+                ref={(node) => {
+                  letterRefs.current[index] = node;
+                }}
+                className={styles.magicLetter}
+                style={{ "--letter-index": index } as React.CSSProperties}
+              >
+                <span className={styles.magicGlyph}>{letter}</span>
+              </span>
+            ))}
+          </div>
+          <p className={styles.asAService}>
+            <span ref={subtitleRef}>as a service</span>
+          </p>
         </div>
-        <p className={styles.asAService}>as a service</p>
-      </div>
-      <SplineHero reducedMotion={reducedMotion} />
-      <div className={styles.heroCopy} data-reveal>
-        <p>
-          We are Aeos Labs, an engineering team that specializes in AI &amp; Video
-          Technology
-        </p>
-        <span>Based in Bangalore, India. Tinkering since 2022.</span>
-      </div>
-      <a className={styles.heroScroll} href="#clients" aria-label="Scroll to clients">
-        <ArrowDown aria-hidden="true" />
-      </a>
-    </section>
+        <SplineHero reducedMotion={reducedMotion} />
+        <div className={styles.heroCopy} data-reveal>
+          <p>
+            We are Aeos Labs, an engineering team that specializes in AI &amp; Video
+            Technology
+          </p>
+          <span>Based in Bangalore, India. Tinkering since 2022.</span>
+        </div>
+        <a className={styles.heroScroll} href="#clients" aria-label="Scroll to clients">
+          <ArrowDown aria-hidden="true" />
+        </a>
+      </section>
+      <HeroPointerEffects
+        reducedMotion={reducedMotion}
+        wordRef={wordRef}
+        subtitleRef={subtitleRef}
+        letterRefs={letterRefs}
+      />
+    </>
   );
 }
 
@@ -544,6 +517,7 @@ export function Aeos() {
 
   return (
     <main className={styles.page}>
+      <LoadingOverlay reducedMotion={reducedMotion} />
       <a className={styles.skipLink} href="#what-we-do">
         Skip to content
       </a>
@@ -565,7 +539,6 @@ export function Aeos() {
       <ContactSection />
       <Footer />
       <TalkToUsCta reducedMotion={reducedMotion} />
-      <CustomCursor reducedMotion={reducedMotion} />
     </main>
   );
 }
