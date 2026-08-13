@@ -405,21 +405,32 @@ function ProcessSection() {
 function ContactSection() {
   return (
     <section className={styles.contact} id="contact">
-      <div className={styles.contactIntro} data-reveal>
-        <p className={styles.eyebrow}>Work with us today</p>
-        <h2>
-          Ready to <em>Upgrade?</em>
-        </h2>
-        <p>
-          Dive into the future with Aeos Labs. Get in touch and build out a smarter,
-          more automated org.
-        </p>
-        <div className={styles.contactImage}>
-          <Image src={media.contact} alt="" fill sizes="(max-width: 800px) 92vw, 40vw" />
+      <div className={styles.contactPanel}>
+        <div className={styles.contactInner}>
+          <div className={styles.contactIntro}>
+            <div className={styles.contactImage} aria-hidden="true">
+              <Image
+                src={media.contact}
+                alt=""
+                fill
+                sizes="(max-width: 1199px) calc(100vw - 80px), 37vw"
+              />
+            </div>
+            <div className={styles.contactCopy}>
+              <p className={styles.contactEyebrow}>Work with us today</p>
+              <h2>
+                Ready to <em>Upgrade?</em>
+              </h2>
+              <p>
+                Dive into the future with Aeos Labs. Get in touch and build out a
+                smarter, more automated org.
+              </p>
+            </div>
+          </div>
+          <div className={styles.contactFormPanel}>
+            <ContactForm />
+          </div>
         </div>
-      </div>
-      <div className={styles.contactFormPanel} data-reveal>
-        <ContactForm />
       </div>
     </section>
   );
@@ -444,40 +455,60 @@ function TalkToUsCta({ reducedMotion }: { reducedMotion: boolean }) {
   );
 }
 
+function FooterSocialIcon({ label }: { label: (typeof socialLinks)[number]["label"] }) {
+  if (label === "X") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4.7 4h4.6l3.4 4.8L16.8 4h2.5l-5.5 6.7L20 20h-4.6l-3.8-5.4L7.2 20H4.7l5.8-7.2L4.7 4Zm3.4 1.8 8.2 12.4h1.6L9.7 5.8H8.1Z" />
+      </svg>
+    );
+  }
+
+  if (label === "Instagram") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="3.5" y="3.5" width="17" height="17" rx="5" />
+        <circle cx="12" cy="12" r="4" />
+        <circle cx="17.6" cy="6.6" r="1" className={styles.socialIconFill} />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M5.2 8.8v10M5.2 5.2v.1M9.6 18.8v-5.6c0-2.7 4.2-3 4.2 0v5.6M9.6 9.5v9.3M13.8 12.2c.5-1.8 4.9-2.4 4.9 1.3v5.3" />
+    </svg>
+  );
+}
+
 function Footer() {
   return (
     <footer className={styles.footer}>
-      <div className={styles.footerBrand}>
-        <Image src={media.footer} alt="Aeos Labs" width={512} height={232} />
-        <p>Magic, engineered in Bangalore.</p>
-      </div>
-      <div className={styles.footerLinks}>
-        <div>
-          <span>Follow</span>
+      <div className={styles.footerTop}>
+        <div className={styles.footerLogo}>
+          <Image src={media.footer} alt="Aeos Labs" width={512} height={232} />
+        </div>
+        <nav className={styles.footerSocials} aria-label="Aeos Labs social media">
           {socialLinks.map((link) => (
-            <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer">
-              {link.label}
-              <ArrowUpRight aria-hidden="true" />
+            <a
+              key={link.label}
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${link.label} — opens in a new tab`}
+            >
+              <FooterSocialIcon label={link.label} />
             </a>
           ))}
-        </div>
-        <div>
-          <span>Navigate</span>
-          {navItems.slice(1).map((item) => (
-            <a key={item.href} href={item.href}>
-              {item.label}
-            </a>
-          ))}
-        </div>
+        </nav>
       </div>
       <div className={styles.footerBottom}>
         <p>® Everto Technologies LLP</p>
-        <div aria-label="Legal information">
-          <span>Terms &amp; Conditions</span>
+        <div className={styles.footerLegal} aria-label="Legal information">
+          <span className={styles.footerTerms}>Terms &amp; Conditions</span>
           <span aria-hidden="true">•</span>
-          <span>Privacy Policy</span>
+          <span className={styles.footerPrivacy}>Privacy Policy</span>
         </div>
-        <a href="#top">Back to top ↑</a>
       </div>
     </footer>
   );

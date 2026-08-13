@@ -172,7 +172,10 @@ export const processSteps: ProcessStep[] = [
 ];
 
 export const socialLinks = [
-  { label: "X", href: "https://x.com/aeoscompany" },
-  { label: "Instagram", href: "https://www.instagram.com/aeoscompany/" },
-  { label: "LinkedIn", href: "https://www.linkedin.com/company/aeoscompany/" },
+  { label: "X", href: "https://x.com/aeos_labs?s=11" },
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/aeos.labs?igsh=Ynh3bHZ2eHc1eW9o&utm_source=qr",
+  },
+  { label: "LinkedIn", href: "https://www.linkedin.com/company/aeos-labs/" },
 ] as const;

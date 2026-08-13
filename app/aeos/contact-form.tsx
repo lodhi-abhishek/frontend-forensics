@@ -84,6 +84,7 @@ export function ContactForm() {
     type?: string;
     autoComplete?: string;
     multiline?: boolean;
+    fullWidth?: boolean;
   }> = [
     { field: "email", label: "Email", type: "email", autoComplete: "email" },
     {
@@ -91,54 +92,78 @@ export function ContactForm() {
       label: "First Name",
       autoComplete: "given-name",
     },
-    { field: "company", label: "Company Name", autoComplete: "organization" },
-    { field: "message", label: "How can we help?", multiline: true },
+    {
+      field: "company",
+      label: "Company Name",
+      autoComplete: "organization",
+      fullWidth: true,
+    },
+    {
+      field: "message",
+      label: "How can we help?",
+      multiline: true,
+      fullWidth: true,
+    },
   ];
 
   return (
     <form className={styles.contactForm} noValidate onSubmit={onSubmit}>
-      {fields.map(({ field, label, type, autoComplete, multiline }) => {
-        const showError = touched[field] && errors[field];
-        const common = {
-          id: `aeos-${field}`,
-          value: values[field],
-          onChange: (
-            event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-          ) => setValue(field, event.target.value),
-          onBlur: () => setTouched((current) => ({ ...current, [field]: true })),
-          "aria-invalid": Boolean(showError),
-          "aria-describedby": showError ? `aeos-${field}-error` : undefined,
-        };
+      {fields.map(
+        ({ field, label, type, autoComplete, multiline, fullWidth }) => {
+          const showError = touched[field] && errors[field];
+          const common = {
+            id: `aeos-${field}`,
+            value: values[field],
+            placeholder: label,
+            onChange: (
+              event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+            ) => setValue(field, event.target.value),
+            onBlur: () =>
+              setTouched((current) => ({ ...current, [field]: true })),
+            "aria-invalid": Boolean(showError),
+            "aria-describedby": showError ? `aeos-${field}-error` : undefined,
+          };
 
-        return (
-          <div className={styles.formField} key={field}>
-            <label htmlFor={`aeos-${field}`}>{label}</label>
-            {multiline ? (
-              <textarea
-                {...common}
-                ref={(node) => {
-                  refs.current[field] = node;
-                }}
-                rows={4}
-              />
-            ) : (
-              <input
-                {...common}
-                ref={(node) => {
-                  refs.current[field] = node;
-                }}
-                type={type ?? "text"}
-                autoComplete={autoComplete}
-              />
-            )}
-            {showError && (
-              <span id={`aeos-${field}-error`} className={styles.formError}>
-                {errors[field]}
-              </span>
-            )}
-          </div>
-        );
-      })}
+          const fieldClassName = [
+            styles.formField,
+            fullWidth ? styles.formFieldFull : "",
+            multiline ? styles.formFieldMessage : "",
+          ]
+            .filter(Boolean)
+            .join(" ");
+
+          return (
+            <div className={fieldClassName} key={field}>
+              <label className={styles.srOnly} htmlFor={`aeos-${field}`}>
+                {label}
+              </label>
+              {multiline ? (
+                <textarea
+                  {...common}
+                  ref={(node) => {
+                    refs.current[field] = node;
+                  }}
+                  rows={4}
+                />
+              ) : (
+                <input
+                  {...common}
+                  ref={(node) => {
+                    refs.current[field] = node;
+                  }}
+                  type={type ?? "text"}
+                  autoComplete={autoComplete}
+                />
+              )}
+              {showError && (
+                <span id={`aeos-${field}-error`} className={styles.formError}>
+                  {errors[field]}
+                </span>
+              )}
+            </div>
+          );
+        },
+      )}
       <button className={styles.submitButton} type="submit">
         <span>Submit Enquiry</span>
         <span aria-hidden="true">↗</span>
