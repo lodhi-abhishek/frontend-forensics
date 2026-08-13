@@ -198,15 +198,17 @@ function Hero({ reducedMotion }: { reducedMotion: boolean }) {
       <h1 id="aeos-title" className={styles.srOnly}>
         Magic as a service
       </h1>
-      <div className={styles.magicWord} aria-hidden="true">
-        {letters.map((letter, index) => (
-          <span key={letter} style={{ "--letter-index": index } as React.CSSProperties}>
-            {letter}
-          </span>
-        ))}
+      <div className={styles.heroComposition} aria-hidden="true">
+        <div className={styles.magicWord}>
+          {letters.map((letter, index) => (
+            <span key={letter} style={{ "--letter-index": index } as React.CSSProperties}>
+              {letter}
+            </span>
+          ))}
+        </div>
+        <p className={styles.asAService}>as a service</p>
       </div>
       <SplineHero reducedMotion={reducedMotion} />
-      <p className={styles.asAService}>as a service</p>
       <div className={styles.heroCopy} data-reveal>
         <p>
           We are Aeos Labs, an engineering team that specializes in AI &amp; Video
@@ -362,20 +364,26 @@ function ProcessSection() {
   return (
     <section className={styles.process} id="process" aria-label="How Aeos works">
       {processSteps.map((step, index) => (
-        <article className={styles.processStep} key={step.id} data-reveal>
-          <div className={styles.processImage}>
-            <Image
-              src={step.image}
-              alt=""
-              fill
-              sizes="(max-width: 800px) 92vw, 44vw"
-            />
-            <span aria-hidden="true">0{index + 1}</span>
-          </div>
-          <div className={styles.processCopy}>
-            <p className={styles.processNumber}>({step.number})</p>
-            <h2>{step.title}</h2>
+        <article
+          className={styles.processStep}
+          key={step.id}
+          aria-labelledby={`process-title-${step.id}`}
+          style={{ "--step-index": index } as React.CSSProperties}
+        >
+          <div className={styles.processStepInner}>
+            <header className={styles.processHeading}>
+              <p className={styles.processNumber}>({step.number})</p>
+              <h2 id={`process-title-${step.id}`}>{step.title}</h2>
+            </header>
             <p className={styles.processDescription}>{step.description}</p>
+            <div className={styles.processIcon} aria-hidden="true">
+              <Image
+                src={step.image}
+                alt=""
+                fill
+                sizes="(max-width: 1199px) 68px, 198px"
+              />
+            </div>
             <details className={styles.processDetails}>
               <summary>
                 <span>{step.summary}</span>
