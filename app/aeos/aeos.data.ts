@@ -1,8 +1,14 @@
-export const splineSceneUrl =
-  "https://prod.spline.design/QXrPpNV6z8SngYZ2/scene.splinecode";
+// Self-hosted copies (downloaded 2026-08-14) so the hero works even if the
+// CDNs are unreachable. Original remote URLs kept for reference:
+// export const splineSceneUrl =
+//   "https://prod.spline.design/QXrPpNV6z8SngYZ2/scene.splinecode";
+export const splineSceneUrl = "/assets/aeos/scene.splinecode";
 
-export const splineViewerScriptUrl =
-  "https://unpkg.com/@splinetool/viewer@1.0.94/build/spline-viewer.js";
+// The viewer's lazy-loaded companion chunks (navmesh.js, physics.js, etc.)
+// live alongside this file in /assets/aeos/.
+// export const splineViewerScriptUrl =
+//   "https://unpkg.com/@splinetool/viewer@1.0.94/build/spline-viewer.js";
+export const splineViewerScriptUrl = "/assets/aeos/spline-viewer.js";
 
 export const media = {
   hero: "/assets/aeos/hero.jpg",

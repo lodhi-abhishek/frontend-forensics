@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 *)",
+      "Bash(curl -sL https://static.linear.app/web/_next/static/chunks/DitheredLogo-BZWaXLN6.js.map)",
+      "Bash(pnpm build *)",
+      "Bash(lsof -ti:3000 -sTCP:LISTEN)",
+      "Bash(pnpm dev *)",
+      "Bash(curl -sf http://localhost:3000/linear-next)",
+      "Bash(command -v chromium-cli)",
+      "Bash(command -v google-chrome)",
+      "Bash(command -v chromium)",
+      "Bash(command -v chromium-browser)",
+      "Bash(command -v playwright)",
+      "Bash(command -v npx)",
+      "Bash(perl -ne 'print; exit if $. >= 5')",
+      "Bash(npx *)",
+      "Bash(curl -fL --retry 2 -o scene.splinecode \"https://prod.spline.design/QXrPpNV6z8SngYZ2/scene.splinecode\")",
+      "Bash(curl -fL --retry 2 -o spline-viewer.js \"https://unpkg.com/@splinetool/viewer@1.0.94/build/spline-viewer.js\")",
+      "Bash(curl -fsL \"https://unpkg.com/@splinetool/viewer@1.0.94/build/?meta\")"
+    ]
+  }
+}
