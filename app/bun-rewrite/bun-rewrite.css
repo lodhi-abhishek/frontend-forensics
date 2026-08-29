@@ -1,0 +1,43 @@
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Martian+Mono:wght@400;500;700&display=swap");
+
+/* Scoped to the /bun-rewrite replica: bun.com's mono + display stacks. */
+.bun-rewrite {
+  --font-mono: "Martian Mono", ui-monospace, SFMono-Regular, Menlo, Consolas,
+    monospace;
+  --font-archivo: "Archivo", ui-sans-serif, system-ui, sans-serif;
+  /* bun.com dark canvas tokens */
+  background: rgb(13, 10, 12);
+  color: rgb(234, 234, 232);
+}
+
+.bun-rewrite .font-archivo {
+  font-family: var(--font-archivo);
+}
+
+/* Match the blog's prose rhythm inside the replica column. */
+.bun-rewrite .bun-lede {
+  color: rgb(168, 168, 165);
+  font-size: 15.5px;
+  line-height: 1.7;
+}
+
+.bun-rewrite .bun-h2 {
+  color: rgb(234, 234, 232);
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  scroll-margin-top: 80px;
+}
+
+.bun-rewrite .bun-h2 .bun-anchor {
+  color: rgb(128, 128, 126);
+  opacity: 0;
+  margin-left: 0.4em;
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+
+.bun-rewrite .bun-h2:hover .bun-anchor {
+  opacity: 1;
+}
