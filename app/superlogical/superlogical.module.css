@@ -252,29 +252,127 @@ html:has(.sl-shell) body::-webkit-scrollbar {
 /* ---------------- slot wheel ---------------- */
 
 .sl-slot {
-  --step: calc(360deg / 26);
-  --r: 4.965em;
-  --half: 5.164em;
+  --step: calc(360deg / 24);
+  --r: 4.9656em;
+  --half: 5.1643em;
+  --reach: 2.68em;
+  --gap: 0.58em;
+  --lip: 2.08em;
   display: inline-block;
   position: relative;
   white-space: nowrap;
   vertical-align: bottom;
 }
+
+.sl-slot.is-interactive {
+  cursor: grab;
+  touch-action: none;
+}
+
+.sl-slot.is-interactive.is-dragging {
+  cursor: grabbing;
+}
+
 .sl-slot .sizer {
   visibility: hidden;
   white-space: nowrap;
 }
+
+.sl-slot .rulers {
+  visibility: hidden;
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+}
+
+.sl-slot .rulers > span {
+  white-space: nowrap;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.sl-slot .wheel {
+  position: absolute;
+  left: 0;
+  top: calc(50% - var(--half));
+  height: calc(2 * var(--half));
+  width: min(var(--wheel-width, 100%), var(--visible-wheel-width, 100%));
+  font-size: var(--wheel-font-size, inherit);
+  line-height: var(--wheel-line-height, inherit);
+  letter-spacing: var(--wheel-letter-spacing, inherit);
+  transform: scale(var(--wheel-scale, 1));
+  transform-origin: 0;
+  pointer-events: none;
+  -webkit-user-select: none;
+  user-select: none;
+  --window: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 calc(50% - var(--reach)),
+    #000 calc(50% - var(--lip)),
+    transparent calc(50% - var(--gap)),
+    transparent calc(50% + var(--gap)),
+    #000 calc(50% + var(--lip)),
+    #000 calc(50% + var(--reach)),
+    transparent 100%
+  );
+  -webkit-mask-image: var(--window);
+  mask-image: var(--window);
+  overflow: clip;
+}
+
+.sl-slot .wheel-hit-area {
+  position: absolute;
+  left: 0;
+  top: calc(50% - var(--half));
+  width: min(var(--wheel-hit-width, 100%), var(--visible-wheel-hit-width, 100%));
+  height: calc(2 * var(--half));
+  pointer-events: none;
+  z-index: 2;
+}
+
+.sl-slot.is-interactive .wheel-hit-area {
+  pointer-events: auto;
+  touch-action: none;
+  cursor: grab;
+}
+
+.sl-slot.is-interactive.is-dragging .wheel-hit-area,
+.sl-slot .wheel-hit-area.is-dragging {
+  cursor: grabbing;
+}
+
+.sl-slot .edge-fade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  --edge: linear-gradient(
+    to right,
+    #000 0,
+    #000 var(--wheel-fade-start, 100%),
+    transparent 100%
+  );
+  -webkit-mask-image: var(--edge);
+  mask-image: var(--edge);
+}
+
 .sl-slot .stage {
   position: absolute;
   inset: 0;
   perspective: calc(var(--r) * 6);
 }
+
 .sl-slot .drum {
   position: absolute;
   inset: 0;
   transform-style: preserve-3d;
   transform: translateZ(calc(-1 * var(--r))) rotateX(var(--theta, 0deg));
 }
+
 .sl-slot .row {
   position: absolute;
   top: 50%;
@@ -285,50 +383,45 @@ html:has(.sl-shell) body::-webkit-scrollbar {
   backface-visibility: hidden;
   transform: rotateX(calc(-1 * var(--i) * var(--step))) translateZ(var(--r));
   color: color-mix(in oklab, var(--color-muted) 60%, var(--color-paper));
+  display: block;
 }
+
 .sl-slot .row-color {
+  color: inherit;
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
   pointer-events: none;
   will-change: opacity;
   opacity: 0;
 }
-.sl-slot .edge-fade {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  mask-image: linear-gradient(
-    to right,
-    #000 0,
-    #000 var(--wheel-fade-start, 100%),
-    transparent 100%
-  );
-  -webkit-mask-image: linear-gradient(
-    to right,
-    #000 0,
-    #000 var(--wheel-fade-start, 100%),
-    transparent 100%
-  );
-}
-.sl-slot .wheel-hit-area {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  height: calc(2 * var(--half));
-  transform: translateY(-50%);
-  cursor: grab;
-  touch-action: none;
-  z-index: 2;
-}
-.sl-slot .wheel-hit-area.is-dragging {
-  cursor: grabbing;
-}
+
 .sl-slot .selected {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
   pointer-events: none;
   z-index: 1;
+}
+
+@media (max-width: 47.999rem) {
+  .sl-slot .wheel-hit-area {
+    height: calc(50% + var(--half));
+    top: 0;
+  }
+  .sl-slot .wheel {
+    --window: linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent calc(50% + var(--carousel-mask-top, -0.62lh)),
+      #000 calc(50% + var(--carousel-mask-top, -0.62lh) + var(--carousel-mask-feather, 0.39lh)),
+      #000 calc(50% + var(--reach) + var(--carousel-mask-lower-offset, -1.5lh)),
+      transparent 100%
+    );
+  }
+  .sl-slot.is-entered .selected {
+    display: none;
+  }
 }
 
 /* ---------------- field panel ---------------- */

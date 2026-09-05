@@ -1,5 +1,6 @@
-export const PHRASES = [
-  "all work.",
+export const SELECTED_PHRASE = "all work.";
+
+export const WHEEL_PHRASES = [
   "local development.",
   "remote access.",
   "coding agents.",
@@ -12,6 +13,11 @@ export const PHRASES = [
   "humans and machines.",
   "operational history.",
   "multiplayer work.",
+] as const;
+
+export const PHRASES = [
+  SELECTED_PHRASE,
+  ...WHEEL_PHRASES,
 ] as const;
 
 export const INTRO_PARAGRAPHS = [

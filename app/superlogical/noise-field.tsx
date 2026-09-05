@@ -374,7 +374,7 @@ export function NoiseField() {
   }, []);
 
   return (
-    <div ref={panelRef} className={styles["sl-field-panel"]} aria-hidden="true">
+    <div ref={panelRef} data-field-panel="" className={styles["sl-field-panel"]} aria-hidden="true">
       <div className={styles["sl-field-panel-canvas"]}>
         <canvas ref={canvasRef} />
         <div ref={grainRef} className={styles.grain} />
