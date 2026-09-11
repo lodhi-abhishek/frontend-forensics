@@ -1,0 +1,76 @@
+/* Anthropic Typography System */
+
+/* 1. Primary Heading Typeface: Copernicus */
+@font-face {
+  font-family: "Copernicus";
+  src: url("/fonts/Copernicus_Book-s.0ib9wqp9moezr.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Copernicus";
+  src: url("/fonts/Copernicus_Medium-s.2hxcbz3n9luy0.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* 2. Primary Editorial Reading Typeface: Tiempos Text */
+@font-face {
+  font-family: "TiemposText";
+  src: url("/fonts/TiemposText_Regular-s.2savi-aqz1fgw.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "TiemposText";
+  src: url("/fonts/TiemposText_RegularItalic-s.2d31pshyw-nif.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "TiemposText";
+  src: url("/fonts/TiemposText_Medium-s.3c2z153ekitug.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* 3. Primary Sans & Interface Typeface: Anthropic Sans */
+@font-face {
+  font-family: "AnthropicSans";
+  src: url("/fonts/AnthropicSans_Roman_Web-s.p.1e3n6bt4oqimz.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "AnthropicSans";
+  src: url("/fonts/AnthropicSans_Italic_Web-s.p.212cqpul8-axk.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* 4. Monospace Code & Spec Typeface: Anthropic Mono */
+@font-face {
+  font-family: "AnthropicMono";
+  src: url("/fonts/AnthropicMono_Roman_Web-s.p.16xhthj2n-pap.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --anthropic-serif: "Copernicus", Georgia, serif;
+  --anthropic-body-serif: "TiemposText", Georgia, serif;
+  --anthropic-sans: "AnthropicSans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --anthropic-mono: "AnthropicMono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

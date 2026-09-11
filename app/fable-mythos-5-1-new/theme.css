@@ -1,0 +1,581 @@
+/* ==========================================================================
+   Anthropic Fable & Mythos 5.1 Design Tokens & Stylesheet
+   Crafted from scratch without bundled CSS dependencies
+   ========================================================================== */
+
+:root {
+  /* Canvas & Brand Tones */
+  --canvas-bg: #FAF9F5;
+  --foreground-primary: #141413;
+  --foreground-secondary: #73726c;
+  --card-ground: #ced6bf;
+  --rule-color: #e8e6dc;
+  --rule-subtle: #f0eee6;
+  --accent-clay: #c6613f;
+  --accent-matcha: #416752;
+
+  /* Benchmark Visual Tones */
+  --chart-matcha: #2E5A44;
+  --chart-coral: #D97757;
+  --chart-cloud: #6B7C85;
+  --chart-sand: #C5BAA8;
+  --chart-sage: #8A9A86;
+  --chart-gold: #C9A96E;
+  --chart-grid: #dedcd1;
+  --chart-bg: #f5f4ed;
+
+  /* Typography Font Stacks */
+  --anthropic-serif: "Copernicus", Georgia, Cambria, "Times New Roman", Times, serif;
+  --anthropic-sans: "AnthropicSans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --tiempos-text: "TiemposText", Georgia, serif;
+  --copernicus: "Copernicus", Georgia, serif;
+  --anthropic-mono: "AnthropicMono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* Scoped Route Reset */
+.fable-new-page {
+  background-color: var(--canvas-bg);
+  color: var(--foreground-primary);
+  font-family: var(--anthropic-sans);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Content Columns */
+.reading-column {
+  width: 100%;
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.media-column {
+  width: 100%;
+  max-width: 1040px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.wide-column {
+  width: 100%;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Editorial Typography */
+.fable-new-page h1,
+.fable-new-page h2,
+.fable-new-page h3,
+.post-heading {
+  font-family: var(--copernicus);
+  font-size: 36px;
+  line-height: 42px;
+  font-weight: 400;
+  color: var(--foreground-primary);
+  margin-top: 4rem;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.01em;
+}
+
+@media (min-width: 768px) {
+  .fable-new-page h1,
+  .fable-new-page h2,
+  .post-heading {
+    font-size: 42px;
+    line-height: 48px;
+  }
+}
+
+.post-subheading {
+  font-family: var(--copernicus);
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 400;
+  color: var(--foreground-primary);
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Editorial Body Text */
+.fable-new-page p,
+.post-text {
+  font-family: var(--tiempos-text);
+  font-size: 18px;
+  line-height: 1.65;
+  color: var(--foreground-primary);
+  margin-bottom: 1.25rem;
+}
+
+.post-text strong {
+  font-weight: 500;
+}
+
+/* Article Summary */
+.article-summary {
+  font-family: var(--copernicus);
+  font-size: 22px;
+  line-height: 1.4;
+  color: var(--foreground-primary);
+  margin-bottom: 2.5rem;
+}
+
+@media (min-width: 992px) {
+  .article-summary {
+    font-size: 28px;
+    line-height: 1.35;
+  }
+}
+
+/* Chart Styles */
+.chart-axis-line {
+  stroke: var(--foreground-primary);
+  stroke-width: 1px;
+}
+
+.chart-grid-line {
+  stroke: var(--chart-grid);
+  stroke-width: 1px;
+}
+
+.chart-tick-text {
+  font-family: var(--anthropic-sans);
+  font-size: 12px;
+  fill: var(--foreground-secondary);
+}
+
+.chart-label-text {
+  font-family: var(--anthropic-sans);
+  font-size: 13px;
+  font-weight: 500;
+  fill: var(--foreground-primary);
+}
+
+/* Monospace & Code */
+.fable-new-page code,
+.fable-new-page pre,
+.font-anthropic-mono {
+  font-family: var(--anthropic-mono);
+}
+
+/* ==========================================================================
+   Hero Section Animations & Layout (Atmospheric WebGL & Blur Entrance)
+   ========================================================================== */
+
+.hero-scene {
+  --fx-hero-top: var(--site-header-height, 68px);
+  --fx-swatch: 22px;
+  --fx-strip: 50px;
+  --fx-sky: #749bd0;
+  --fx-text-shadow: 0 4px 16px rgba(20, 40, 70, 0.12);
+  min-height: 100svh;
+  margin-top: calc(-1 * var(--fx-hero-top));
+  padding: calc(var(--fx-hero-top) + 48px) 24px calc(var(--fx-strip) + 32px);
+  color: #ffffff;
+  background-color: var(--fx-sky);
+  pointer-events: none;
+  flex-direction: column;
+  justify-content: center;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  transition: background-color 0.8s ease;
+}
+
+@media (min-width: 900px) {
+  .hero-scene {
+    --fx-swatch: 18px;
+    height: 100svh;
+    min-height: 640px;
+    padding-bottom: 80px;
+    padding-left: 48px;
+    padding-right: 48px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-scene {
+    padding-left: 80px;
+    padding-right: 80px;
+  }
+}
+
+/* Lighting Mode Variations */
+.hero-scene.hero-morning { --fx-sky: #aaa9bc; }
+.hero-scene.hero-dusk    { --fx-sky: #7a86a8; }
+.hero-scene.hero-night   { --fx-sky: #27314b; }
+.hero-scene.hero-unsupported {
+  background: linear-gradient(180deg, #86a7d3 0%, var(--fx-sky) 55%, #5b7fae 100%);
+}
+
+.hero-scene a {
+  pointer-events: auto;
+}
+
+/* Canvas Element */
+.hero-canvas {
+  background-color: var(--fx-sky);
+  opacity: 0;
+  pointer-events: auto;
+  width: 100%;
+  height: 100%;
+  transition: opacity 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.hero-canvas.hero-drawn {
+  opacity: 1;
+}
+
+.hero-canvas.hero-over-bird {
+  cursor: pointer;
+}
+
+/* Words Container */
+.hero-words {
+  z-index: 4;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  display: flex;
+  position: relative;
+}
+
+@media (min-width: 900px) {
+  .hero-words {
+    grid-template-columns: repeat(12, 1fr);
+    align-items: start;
+    gap: 0 32px;
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    container-type: inline-size;
+  }
+}
+
+/* Entrance Fade & Blur Animations */
+.hero-date,
+.hero-title-line,
+.hero-index-row-inner {
+  opacity: 0;
+  animation: 0s linear 5s forwards hero-fx-wait;
+}
+
+.hero-scene[data-fx-ready] .hero-date,
+.hero-scene[data-fx-ready] .hero-title-line,
+.hero-scene[data-fx-ready] .hero-index-row-inner {
+  animation: 0.8s ease-out both hero-fx-el-in;
+  animation-delay: calc(var(--fx-order, 0) * 0.3s + var(--fx-row, 0) * 45ms);
+}
+
+.hero-scene[data-fx-ready] .hero-title-line {
+  animation-name: hero-fx-title-in;
+}
+
+/* Prehead Date */
+.hero-date {
+  --fx-order: 0;
+  margin: 0 0 16px;
+  text-shadow: var(--fx-text-shadow);
+  pointer-events: auto;
+  cursor: text;
+  user-select: text;
+  font-family: var(--anthropic-sans), sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+@media (min-width: 900px) {
+  .hero-date {
+    margin-bottom: 24px;
+    text-align: center;
+    grid-column: 3 / 11;
+  }
+}
+
+@media (min-width: 1240px) {
+  .hero-date {
+    grid-column: 4 / 10;
+  }
+}
+
+/* Hero Title */
+.hero-title {
+  font-family: var(--copernicus), serif;
+  font-feature-settings: "pnum" on, "lnum" on, "liga" on;
+  text-align: left;
+  max-width: 100%;
+  text-shadow: var(--fx-text-shadow);
+  pointer-events: none;
+  user-select: text;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 0;
+  font-size: clamp(36px, 10.5vw, 80px);
+  font-weight: 400;
+  line-height: 1.05;
+  display: flex;
+  color: #ffffff;
+}
+
+@media (min-width: 900px) {
+  .hero-title {
+    grid-column: 3 / 11;
+    font-size: clamp(48px, 5.3cqi, 72px);
+    line-height: 1.1;
+  }
+}
+
+@media (min-width: 1240px) {
+  .hero-title {
+    grid-column: 4 / 10;
+  }
+}
+
+.hero-title-line {
+  --fx-order: 1;
+  white-space: nowrap;
+  pointer-events: auto;
+  cursor: text;
+  font-weight: 400;
+}
+
+.hero-title-line-second {
+  --fx-order: 2;
+  align-self: flex-end;
+  padding-left: 1.6em;
+}
+
+@media (min-width: 900px) {
+  .hero-title-line-second {
+    padding-left: 0;
+  }
+}
+
+.hero-title-claude {
+  font-weight: 400;
+  font-feature-settings: "pnum" on, "lnum" on, "liga" on, "dlig" on;
+}
+
+/* Table of Contents Index */
+.hero-index {
+  font-family: var(--copernicus), serif;
+  font-feature-settings: "pnum" on, "lnum" on, "liga" on;
+  width: 100%;
+  max-width: 416px;
+  margin: 48px 0 0;
+  text-align: left;
+  text-shadow: var(--fx-text-shadow);
+  pointer-events: auto;
+  cursor: text;
+  user-select: text;
+  font-size: 14px;
+  line-height: 26px;
+  color: #ffffff;
+}
+
+@media (min-width: 900px) {
+  .hero-index {
+    max-width: none;
+    margin-top: 64px;
+    grid-column: 4 / 10;
+    font-size: 15px;
+  }
+}
+
+@media (min-width: 1240px) {
+  .hero-index {
+    grid-column: 5 / 9;
+  }
+}
+
+/* Dynamic Focus Blur on Index Rows */
+@media (hover: hover) and (pointer: fine) and (min-width: 900px) {
+  .hero-index:hover .hero-index-row:not(:hover) {
+    opacity: 0.8;
+    filter: blur(0.5px);
+  }
+  .hero-index:hover .hero-index-row:hover + .hero-index-row + .hero-index-row {
+    opacity: 0.86;
+    filter: blur(0.35px);
+  }
+  .hero-index:hover .hero-index-row:has(+ .hero-index-row + .hero-index-row:hover) {
+    opacity: 0.86;
+    filter: blur(0.35px);
+  }
+  .hero-index:hover .hero-index-row:hover + .hero-index-row {
+    opacity: 0.94;
+    filter: blur(0.15px);
+  }
+  .hero-index:hover .hero-index-row:has(+ .hero-index-row:hover) {
+    opacity: 0.94;
+    filter: blur(0.15px);
+  }
+}
+
+.hero-index-row {
+  color: inherit;
+  text-decoration: none;
+  transition: opacity 0.4s, filter 0.4s;
+  display: block;
+}
+
+.hero-index-row-inner {
+  --fx-order: 3;
+  align-items: baseline;
+  display: flex;
+}
+
+.hero-index-row-inner > span {
+  flex-shrink: 0;
+  margin: 0;
+}
+
+.hero-index-row-inner > .hero-index-leader {
+  margin: 0 4px;
+}
+
+.hero-index-number {
+  font-family: var(--anthropic-sans), sans-serif;
+  font-feature-settings: "pnum" on, "lnum" on, "liga" on;
+  font-variant-numeric: lining-nums tabular-nums;
+  font-size: 13px;
+}
+
+.hero-index-leader {
+  letter-spacing: 1px;
+  white-space: nowrap;
+  flex: 1 1 0;
+  min-width: 16px;
+  overflow: hidden;
+  opacity: 0.6;
+}
+
+/* Time of Day Swatch Controls (Bottom Left) */
+.hero-looks {
+  bottom: calc(var(--fx-strip) / 2);
+  z-index: 4;
+  user-select: none;
+  pointer-events: auto;
+  align-items: center;
+  gap: 7px;
+  display: flex;
+  position: absolute;
+  left: 24px;
+  transform: translateY(50%);
+}
+
+@media (min-width: 900px) {
+  .hero-looks {
+    gap: 8px;
+    bottom: 22px;
+    left: 22px;
+    transform: none;
+  }
+}
+
+.hero-look {
+  box-sizing: border-box;
+  width: var(--fx-swatch);
+  height: var(--fx-swatch);
+  color: transparent;
+  cursor: pointer;
+  background-color: var(--sw);
+  appearance: none;
+  border: 1.5px solid rgba(255, 255, 255, 0.45);
+  border-radius: 50%;
+  padding: 0;
+  font-size: 0;
+  transition: border-width 0.16s, transform 0.16s, border-color 0.16s;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(20, 40, 70, 0.08);
+}
+
+.hero-look:hover {
+  border-color: rgba(255, 255, 255, 0.85);
+}
+
+.hero-look:focus-visible {
+  outline-offset: 3px;
+  outline: 2px solid #ffffff;
+}
+
+.hero-look.hero-on {
+  border: 2px solid rgba(255, 255, 255, 0.92);
+  transform: scale(1.06);
+}
+
+/* Hero Bottom-Right Credit */
+.hero-credit {
+  font-family: var(--anthropic-sans), sans-serif;
+  font-feature-settings: "pnum" on, "lnum" on, "liga" on;
+  right: 24px;
+  bottom: calc(var(--fx-strip) / 2);
+  z-index: 4;
+  letter-spacing: 0.005em;
+  color: #ffffff;
+  text-shadow: var(--fx-text-shadow);
+  user-select: none;
+  font-size: 12.5px;
+  font-weight: 400;
+  position: absolute;
+  transform: translateY(50%);
+}
+
+@media (min-width: 900px) {
+  .hero-credit {
+    bottom: 22px;
+    right: 22px;
+    transform: none;
+  }
+}
+
+/* Keyframe Definitions */
+@keyframes hero-fx-title-in {
+  0% {
+    opacity: 0;
+    filter: blur(26px);
+  }
+  45% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0px);
+  }
+}
+
+@keyframes hero-fx-el-in {
+  0% {
+    opacity: 0;
+    filter: blur(12px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0px);
+  }
+}
+
+@keyframes hero-fx-wait {
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-scene,
+  .hero-scene * {
+    opacity: 1 !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}

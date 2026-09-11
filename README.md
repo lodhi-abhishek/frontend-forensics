@@ -16,3 +16,7 @@
 - https://www.mit.edu/education/
 
 - https://www.superlogical.com
+
+- https://macroscope.com/
+
+- https://www.anthropic.com/claude-fable-and-mythos-5-1
