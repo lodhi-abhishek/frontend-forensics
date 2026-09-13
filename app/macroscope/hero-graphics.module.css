@@ -1,0 +1,36 @@
+.broadcastRoot{position:relative;display:inline-block;width:96px;height:76px;color:inherit}
+.broadcastSvg{display:block;width:100%;height:100%;overflow:visible}
+.broadcastPulsePair{opacity:0;transform:scale(.42);transform-box:view-box;transform-origin:center;animation:broadcastRipplePush 4.8s cubic-bezier(.16,1,.3,1) infinite}
+.broadcastInnerRipple,.broadcastOuterRipple{fill:none;stroke:currentColor;stroke-width:1.18;stroke-linecap:round;vector-effect:non-scaling-stroke}
+.broadcastInnerRipple{opacity:.64}
+.broadcastOuterRipple{opacity:.92}
+.broadcastPulseTwo{animation-delay:-2.4s}
+.broadcastEmitter{color:currentColor;transform-box:view-box;transform-origin:center;animation:broadcastEmitterQuarterTurn 9.6s cubic-bezier(.16,1,.3,1) infinite}
+.broadcastEmitter circle{fill:currentColor}
+.broadcastEmitter circle:not(:first-of-type){opacity:.48}
+@keyframes broadcastRipplePush{0%{opacity:0;transform:scale(.42)}5%{opacity:.92}28%{opacity:.68;transform:scale(1)}48%{opacity:.5;transform:scale(1)}50%{opacity:.46;transform:scale(1)}78%{opacity:0;transform:scale(1.42)}to{opacity:0;transform:scale(1.42)}}
+@keyframes broadcastEmitterQuarterTurn{0%{opacity:.72;transform:rotate(0deg);animation-timing-function:cubic-bezier(.16,1,.3,1)}8%{opacity:1;transform:rotate(90deg)}25%{opacity:1;transform:rotate(90deg);animation-timing-function:cubic-bezier(.16,1,.3,1)}33%{opacity:.82;transform:rotate(180deg)}50%{opacity:.82;transform:rotate(180deg);animation-timing-function:cubic-bezier(.16,1,.3,1)}58%{opacity:1;transform:rotate(270deg)}75%{opacity:1;transform:rotate(270deg);animation-timing-function:cubic-bezier(.16,1,.3,1)}83%,to{opacity:.72;transform:rotate(1turn)}}
+@media (prefers-reduced-motion:reduce){.broadcastEmitter,.broadcastPulsePair{animation:none}.broadcastPulseOne{opacity:.52;transform:scale(1)}.broadcastPulseTwo{display:none}}
+.orbitRoot{position:relative;display:inline-block;width:96px;height:76px;overflow:visible;touch-action:none}
+.orbitCanvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:grab}
+.orbitCanvas:active{cursor:grabbing}
+.radarRoot{position:relative;display:block;width:96px;height:76px;color:inherit}
+.radarSvg{display:block;width:100%;height:100%;overflow:visible}
+.radarGrid{fill:none;stroke:currentColor;stroke-width:1.3;stroke-linecap:round;opacity:.3}
+.radarGrid path:last-child{opacity:.55}
+.radarSweep{transform-origin:60px 48px;animation:radarRadarSweep 6s linear infinite}
+.radarSweepGradient{display:block;width:76px;height:76px;border-radius:50%;background:conic-gradient(from -112deg,transparent 0deg,color-mix(in srgb,currentColor 4%,transparent) 28deg,color-mix(in srgb,currentColor 15%,transparent) 66deg,color-mix(in srgb,currentColor 46%,transparent) 98deg,color-mix(in srgb,currentColor 82%,transparent) 111deg,transparent 112deg,transparent 1turn)}
+.radarSweepLine{fill:none;stroke:currentColor;stroke-width:1.3;stroke-linecap:round;opacity:.94}
+.radarRadarReturn{fill:currentColor;opacity:0;transform-box:fill-box;transform-origin:center;animation:radarRadarReturn 6s cubic-bezier(.16,1,.3,1) infinite}
+.radarScanFlash{fill:color-mix(in srgb,currentColor 1%,transparent);stroke:currentColor;stroke-width:1.3;opacity:0;animation:radarRadarFlash 6s cubic-bezier(.16,1,.3,1) infinite}
+.radarOrigin{fill:currentColor;opacity:.72}
+@keyframes radarRadarSweep{to{transform:rotate(1turn)}}
+@keyframes radarRadarReturn{0%{opacity:0;transform:scale(.45)}0.8%{opacity:1;transform:scale(1.45)}4%{opacity:.92;transform:scale(1)}48%{opacity:.5;transform:scale(.96)}88%{opacity:.18;transform:scale(.9)}98%,to{opacity:0;transform:scale(.78)}}
+@keyframes radarRadarFlash{0%,to{opacity:0}0.8%{opacity:.12}5%{opacity:.025}10%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.radarSweep{animation:none;transform:rotate(42deg)}.radarRadarReturn,.radarScanFlash{animation:none;opacity:0}.radarFirstReturn{opacity:.78;transform:scale(1)}}
+.wrap { display: inline-flex; align-items: center; justify-content: center; width: 90px; height: 84px; color: color-mix(in srgb, #5b4dff 58%, #31436f); }
+@media(max-width: 900px) { .wrap { width: 82px; height: 80px; } }
+@media(max-width: 380px) { .wrap { width: 70px; } }
+
+.orbitRoot, .radarRoot, .broadcastRoot { flex: 0 0 auto; width: 83.52px; height: 66.12px; }
+@media (max-width: 900px) { .orbitRoot, .radarRoot, .broadcastRoot { width: 96px; height: 76px; } }
