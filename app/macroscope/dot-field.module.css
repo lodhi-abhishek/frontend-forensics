@@ -1,0 +1,7 @@
+.field { --cyan: .36; --pink: .34; position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; contain: layout paint style; }
+.field::before,.field::after { position: absolute; inset: 0; content: ""; mask-image: radial-gradient(circle at 1px 1px,#000 0 1px,transparent 1px); mask-size: 8px 8px; }
+.field::before { background: radial-gradient(circle at var(--dot-ring-a-x,64%) var(--dot-ring-a-y,56%),transparent 0 calc(var(--dot-ring-a-size,24%) - 10%),rgba(25,189,239,.32) calc(var(--dot-ring-a-size,24%) - 3%),transparent calc(var(--dot-ring-a-size,24%) + 8%)),radial-gradient(circle at var(--dot-ring-b-x,32%) var(--dot-ring-b-y,62%),transparent 0 calc(var(--dot-ring-b-size,24%) - 10%),rgba(229,78,194,.28) calc(var(--dot-ring-b-size,24%) - 3%),transparent calc(var(--dot-ring-b-size,24%) + 9%)),radial-gradient(ellipse at var(--dot-wave-a-x,10%) var(--dot-wave-a-y,34%),rgba(25,189,239,var(--cyan)) 0%,rgba(25,189,239,.22) 12%,transparent 34%),radial-gradient(ellipse at var(--dot-wave-b-x,88%) var(--dot-wave-b-y,62%),rgba(229,78,194,var(--pink)) 0%,rgba(229,78,194,.21) 11%,transparent 36%); opacity:var(--dot-wave-opacity,.46); }
+.field::after { background:radial-gradient(circle at var(--dot-ring-a-x,64%) var(--dot-ring-a-y,56%),rgba(255,244,196,.24),transparent 24%);opacity:calc(var(--dot-wave-opacity,.46) * .12);mix-blend-mode:plus-lighter; }
+.dark { --cyan: .52; --pink: .5; }
+.dark::before,.dark::after { mix-blend-mode:screen; }
+@media(prefers-reduced-motion:reduce) { .field::before{opacity:.18}.field::after{opacity:.02} }
